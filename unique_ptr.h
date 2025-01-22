@@ -12,15 +12,34 @@ private:
 	T* ptr;
 public:
 	unique_ptrs()noexcept = default;
-	explicit unique_ptrs(T* ptr_p)noexcept : ptr{ ptr_p } {}
+	explicit unique_ptrs(T* ptr_p)noexcept : ptr{ ptr_p } 
+	{
+		ptr_p = nullptr;
+		delete ptr_p;
+	}
 	unique_ptrs(const unique_ptrs& ptr) = delete;
-	unique_ptrs(unique_ptrs&& ptr) = delete;
+	unique_ptrs(unique_ptrs&& ptr_p)
+	{
+		ptr = ptr_p.ptr;
+		ptr_p.ptr = nullptr;
+		delete ptr_p.ptr;
+	}
 
 	const T* get_ptr()const noexcept { return ptr; }
 	//изменяет значение 
-	void set_ptr(const T* value)noexcept { *ptr = *value; }
+	void set_ptr(const T* value)noexcept 
+	{
+		*ptr = *value;
+		delete value;
+	}
 
 	unique_ptrs& operator=(const unique_ptrs& ptr) = delete;
+
+	unique_ptrs&& operator=(const unique_ptrs&& ptr_p)
+	{
+		ptr = ptr_p.ptr;
+		delete ptr_p.ptr;
+	}
 
 	//очищает память
 	void del() 

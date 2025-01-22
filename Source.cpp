@@ -26,6 +26,7 @@ int main()
 		cout << "\n" << *ptr_2 << "\n";
 
 		cout << ptr_2.get_count();
+
 	}
 
 	catch (const del_error& del)

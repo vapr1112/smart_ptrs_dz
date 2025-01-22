@@ -22,7 +22,11 @@ public:
 	static int get_count() { return count; }
 	//изменяет значение 
 	void set_ptr(const T* value)noexcept { *ptr = *value; }
-	shared_ptrs<T>& operator=(const shared_ptrs<T>& ptr_p)noexcept { *ptr = *ptr_p.ptr; }
+	shared_ptrs<T>& operator=(const shared_ptrs<T>& ptr_p)noexcept 
+	{
+		*ptr = *ptr_p.ptr; 
+		count++;
+	}
 	//очищает память
 	void del()
 	{
