@@ -15,37 +15,47 @@ public:
 	explicit unique_ptrs(T* ptr_p)noexcept : ptr{ ptr_p } 
 	{
 		ptr_p = nullptr;
-		delete ptr_p;
 	}
 	unique_ptrs(const unique_ptrs& ptr) = delete;
 	unique_ptrs(unique_ptrs&& ptr_p)
 	{
 		ptr = ptr_p.ptr;
 		ptr_p.ptr = nullptr;
-		delete ptr_p.ptr;
 	}
 
 	const T* get_ptr()const noexcept { return ptr; }
 	//изменяет значение 
-	void set_ptr(const T* value)noexcept 
+	void set_ptr( T* value)noexcept 
 	{
-		*ptr = *value;
-		delete value;
+		if (!ptr)
+		{
+			delete[] ptr;
+		}
+		ptr = value;
+		value = nullptr;
 	}
 
 	unique_ptrs& operator=(const unique_ptrs& ptr) = delete;
 
 	unique_ptrs&& operator=(const unique_ptrs&& ptr_p)
 	{
-		ptr = ptr_p.ptr;
-		delete ptr_p.ptr;
+		if (this != ptr_p)
+		{
+			if (!ptr_p.ptr)
+			{
+				delete[] ptr;
+			}
+			ptr = ptr_p.ptr;
+			ptr_p.ptr = nullptr;
+		}
+
 	}
 
 	//очищает память
 	void del() 
 	{
 		if (!ptr) throw del_error("\nуказатель указывает на пустое значение\n");
-		delete ptr; 
+		delete[] ptr; 
 	}
 
 	//показывает значение указателя
@@ -59,5 +69,5 @@ public:
 
 	T* operator->()noexcept { return *ptr; }
 
-	~unique_ptrs()noexcept = default;
+	~unique_ptrs()noexcept { delete[] ptr; }
 };
